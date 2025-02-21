@@ -14,7 +14,7 @@
   }
   .add-task-button {
     padding: 10px 15px;
-    background-color: #007bff;
+    background: #611E7C;
     color: white;
     border: none;
     cursor: pointer;
@@ -140,7 +140,13 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 10px;
+    padding: 20px;
+  }
+  .task-form-dark{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
   }
   
   .task-form label {
@@ -183,13 +189,110 @@
     transform: scale(1.02);
     opacity: 0.8;
   }
-  
+  .task-modal {
+  width: 450px;
+  max-width: 450px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  display: "flex";
+  justify-content: "center";
+  justify-items:"center";
+  align-items: "center";
+
+}
+.task-modal-dark-h2 {
+  color:white
+}
+
+.task-modal-h2 {
+  color:black
+}
+.task-modal-dark {
+  width: 450px;
+  max-width: 450px;
+  padding: 10px;
+  background: #181622;
+  border-radius: 8px;
+  display: "flex";
+  justify-content: "center";
+  justify-items:"center";
+  align-items: "center";
+
+}
+
+
+
+
+
+h2 {
+  text-align: center;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.task-form-dark label {
+  font-weight: bold;
+  color: white;
+}
+
+.task-form-dark input,
+.task-form-dark textarea,
+.task-form-dark select {
+  width: 100%;
+  padding: 10px;
+  color: black;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+
+
+.task-form label {
+  font-weight: bold;
+  color: black;
+}
+
+.task-form input,
+.task-form textarea,
+.task-form select {
+  width: 100%;
+  padding: 10px;
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.task-form-dark textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.task-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.save-task-button {
+  width: 100%;
+  padding: 10px;
+  background: #611E7C;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.save-task-button:hover {
+  background: #3a0a4d;
+}
+
 
   @media (max-width: 768px) {
-    .kanban-container{
-      width: 100vw;
-    }
-
+   
     .kanban-board {
       grid-template-columns: 1fr;
      

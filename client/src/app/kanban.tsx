@@ -12,6 +12,7 @@ import {
   usedeleteTaskMutation,
   useUpdateTaskMutation,
 } from "../api/task/index";
+import toast from "react-hot-toast";
 function Kanban() {
   const { theme, toggleTheme } = useTheme();
   const { mutate: addTask } = useAddTaskMutation();
@@ -21,13 +22,15 @@ function Kanban() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskType | null>(null);
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
-  const { data, isLoading ,refetch} = getTasksQuery();
+  const { data, isLoading, refetch } = getTasksQuery();
   const touchStartX = useRef<number>(0);
   const touchStartY = useRef<number>(0);
   useEffect(() => {
     if (data && data.message.length > 0) {
       console.log(data, "tasks");
       setTasks(data.message);
+    }else{
+      setTasks([])
     }
   }, [data]);
 
@@ -42,10 +45,11 @@ function Kanban() {
       console.log(task);
       updateTask(task, {
         onSuccess: () => {
-          console.log("Task updated successfully!");
+          toast.success("Task updated successfully");
+          refetch();
         },
         onError: (error) => {
-          console.error("Failed to update task:", error);
+          toast.success("Error occurred while updating");
         },
       });
     } else {
@@ -53,10 +57,12 @@ function Kanban() {
       addTask(task, {
         onSuccess: () => {
           console.log("Task added successfully!");
+          toast.success("Task addded successfully");
+          refetch();
           closeModal();
         },
         onError: (error) => {
-          console.error("Failed to add task:", error);
+          toast.success("Error occurred while updating");
         },
       });
     }
@@ -66,10 +72,12 @@ function Kanban() {
   const handleDeleteTask = (taskId: number) => {
     deleteTask(taskId, {
       onSuccess: () => {
-        refetch()
+        console.log("Task Deleted successfully!");
+        toast.success("Task Deleted successfully!")
+        refetch();
       },
       onError: (error) => {
-        console.error("Failed to add task:", error);
+        toast.success("Error occurred while updating");
       },
     });
   };
@@ -102,33 +110,35 @@ function Kanban() {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     if (e.target instanceof HTMLElement) {
-      e.target.classList.add('dragging');
+      e.target.classList.add("dragging");
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!draggedTask) return;
-    
+
     // e.preventDefault();
     const touch = e.touches[0];
     const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
-    const column = elements.find(el => 
-      el.classList.contains('kanban-column')
+    const column = elements.find((el) =>
+      el.classList.contains("kanban-column")
     ) as HTMLElement;
 
     if (column) {
-      const status = column.dataset.status as TaskType['status'];
+      const status = column.dataset.status as TaskType["status"];
       if (status && draggedTask.status !== status) {
-        setTasks(tasks.map(task =>
-          task.id === draggedTask.id ? { ...task, status } : task
-        ));
+        setTasks(
+          tasks.map((task) =>
+            task.id === draggedTask.id ? { ...task, status } : task
+          )
+        );
       }
     }
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (e.target instanceof HTMLElement) {
-      e.target.classList.remove('dragging');
+      e.target.classList.remove("dragging");
     }
     setDraggedTask(null);
   };
@@ -137,7 +147,7 @@ function Kanban() {
     <div className="kanban-container">
       <div className="widgets">
         <button className="add-task-button" onClick={() => openModal()}>
-          ➕ Add Task
+          Add Task
         </button>
         <div
           className={theme == "dark" ? "toggle-slide-1" : "toggle-slide"}
@@ -146,16 +156,13 @@ function Kanban() {
           <div className={`switch ${theme == "dark" ? "slide " : ""}`}></div>
         </div>
       </div>
-    
 
-      
       <div className="kanban-board">
         {["todo", "progress", "done"].map((status) => (
           <KanbanColumn
-       
-          handleTouchEnd={handleTouchEnd}
-          handleTouchMove={handleTouchMove}
-          handleTouchStart={handleTouchStart}
+            handleTouchEnd={handleTouchEnd}
+            handleTouchMove={handleTouchMove}
+            handleTouchStart={handleTouchStart}
             key={status}
             title={
               status === "todo"

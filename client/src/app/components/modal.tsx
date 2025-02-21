@@ -13,11 +13,14 @@ const modalStyles: React.CSSProperties = {
 };
 
 const modalContentStyles: React.CSSProperties = {
-  background: "#fff",
-  padding: "20px",
+
   borderRadius: "8px",
-  minWidth: "300px",
+  minWidth: "350px",
   position: "relative",
+  display: "flex",
+  justifyContent: "center",
+  justifyItems:"center",
+  alignItems: "center",
 };
 
 const closeButtonStyles: React.CSSProperties = {
