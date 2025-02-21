@@ -20,7 +20,37 @@ const TaskController = {
       res.status(500).json(customResponse(500, "Internal server error"));
     }
   },
+  async addComment(req, res) {
+    try {
+      const taskId = req.params.id
+      const { comment  } =  req.body
+      const Comment = await prisma.comment.create({
+       data:{
+        taskId:taskId,
+        content :comment
+       }
+      });
+      res.json(customResponse(200, Comment));
+    } catch (err) {
+      console.error(err);
+      res.status(500).json(customResponse(500, "Internal server error"));
+    }
+  },
+  async getComment(req, res) {
+    try {
+      const taskId = req.params.id
 
+      const Comment = await prisma.comment.findMany({
+      where:{
+        taskId:taskId
+      }
+      });
+      res.json(customResponse(200, Comment));
+    } catch (err) {
+      console.error(err);
+      res.status(500).json(customResponse(500, "Internal server error"));
+    }
+  },
   async getTasks(req, res) {
     try {
       const tasks = await prisma.task.findMany();

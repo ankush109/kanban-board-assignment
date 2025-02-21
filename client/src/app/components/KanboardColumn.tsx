@@ -14,6 +14,7 @@ function KanbanColumn({
   handleTouchEnd,
   handleTouchMove,
   handleTouchStart,
+  handleTaskInfo
 }: KanbanColumnProps) {
   const filteredTasks = tasks.filter((task) => task.status === status);
   const { theme } = useTheme()
@@ -27,6 +28,7 @@ function KanbanColumn({
       <h3 className={`${theme == "dark" ? "column_title" : "column_title_light"}`}>{title}</h3>
       {filteredTasks.map((task) => (
         <TaskCard
+        handleTaskInfo={handleTaskInfo}
           handleTouchEnd={handleTouchEnd}
           handleTouchMove={handleTouchMove}
           handleTouchStart={handleTouchStart}

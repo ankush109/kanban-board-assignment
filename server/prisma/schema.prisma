@@ -8,10 +8,20 @@ datasource db {
 }
 
 model Task {
-  id       String  @id @default(uuid()) @db.Uuid
-  name     String
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
   description String
-  status String
-
+  status      String
+  comments    Comment[] 
 }
+
+model Comment {
+  id        String  @id @default(uuid()) @db.Uuid
+  content   String
+  createdAt DateTime @default(now())
+  taskId    String  @db.Uuid
+  task      Task    @relation(fields: [taskId], references: [id], onDelete: Cascade) 
+}
+
+
 

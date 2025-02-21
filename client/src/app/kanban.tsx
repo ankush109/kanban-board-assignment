@@ -4,25 +4,31 @@ import "./styles/kanban.css";
 import "./styles/toggle.css";
 import TaskModal from "./components/TaskModal";
 import KanbanColumn from "./components/KanboardColumn";
-import { TaskType } from "./types/types";
+import { Task, TaskType } from "./types/types";
 import { useTheme } from "./provider/ThemeProvider";
 import {
   getTasksQuery,
+  useAddCommentMutation,
   useAddTaskMutation,
   usedeleteTaskMutation,
   useUpdateTaskMutation,
 } from "../api/task/index";
 import toast from "react-hot-toast";
+import TaskInfo from "./components/TaskInfo";
 function Kanban() {
   const { theme, toggleTheme } = useTheme();
   const { mutate: addTask } = useAddTaskMutation();
   const { mutate: updateTask } = useUpdateTaskMutation();
   const { mutate: deleteTask } = usedeleteTaskMutation();
+  const { mutate: addComment } = useAddCommentMutation();
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskInfo,setTaskInfo] =useState(false)
   const [editingTask, setEditingTask] = useState<TaskType | null>(null);
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
+  const [undoTask,setundoTask] = useState<TaskType | null>(null)
   const { data, isLoading, refetch } = getTasksQuery();
+  const [currentTask ,setcurrentTask ] = useState<TaskType | null>(null)
   const touchStartX = useRef<number>(0);
   const touchStartY = useRef<number>(0);
   useEffect(() => {
@@ -69,11 +75,12 @@ function Kanban() {
     closeModal();
   };
 
-  const handleDeleteTask = (taskId: number) => {
-    deleteTask(taskId, {
+  const handleDeleteTask = (task: Task) => {
+    deleteTask(task.id, {
       onSuccess: () => {
-        console.log("Task Deleted successfully!");
+        console.log(task,"Task Deleted successfully!");
         toast.success("Task Deleted successfully!")
+        setundoTask(task)
         refetch();
       },
       onError: (error) => {
@@ -117,7 +124,7 @@ function Kanban() {
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!draggedTask) return;
 
-    // e.preventDefault();
+    e.preventDefault();
     const touch = e.touches[0];
     const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
     const column = elements.find((el) =>
@@ -135,7 +142,49 @@ function Kanban() {
       }
     }
   };
-
+  const handleAddComment = (taskId:any,comment:any) => {
+    console.log(taskId,"taskid")
+    const taskData = {
+      comment:comment,
+      taskId:taskId
+    }
+    addComment({taskData}, {
+      onSuccess: () => {
+       console.log(comment,"comment")
+      },
+      onError: (error) => {
+        toast.success("Error occurred while updating");
+      },
+    });
+  }
+  const handleUndoDelete = () => {
+   if(undoTask){
+    addTask(undoTask, {
+      onSuccess: () => {
+        console.log("Task added successfully!");
+        toast.success("Task undo successfully");
+        refetch();
+        setundoTask(null)
+       
+      },
+      onError: (error) => {
+        toast.success("Error occurred while updating");
+      },
+    });
+   }
+  
+  }
+  const handleTaskInfo = (task: TaskType) => {
+    console.log(task,"handletaskinfo")
+    setcurrentTask(task);
+    setTaskInfo(true);  // Instead of toggling, explicitly open
+  };
+  
+  const closeTaskInfo = () => {
+    setTaskInfo(false);
+    setcurrentTask(null);
+  };
+  
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (e.target instanceof HTMLElement) {
       e.target.classList.remove("dragging");
@@ -149,6 +198,9 @@ function Kanban() {
         <button className="add-task-button" onClick={() => openModal()}>
           Add Task
         </button>
+        <button  disabled={undoTask==null}className="add-task-button" onClick={handleUndoDelete}>
+          Undo
+        </button>
         <div
           className={theme == "dark" ? "toggle-slide-1" : "toggle-slide"}
           onClick={toggleTheme}
@@ -160,6 +212,7 @@ function Kanban() {
       <div className="kanban-board">
         {["todo", "progress", "done"].map((status) => (
           <KanbanColumn
+          handleTaskInfo={handleTaskInfo}
             handleTouchEnd={handleTouchEnd}
             handleTouchMove={handleTouchMove}
             handleTouchStart={handleTouchStart}
@@ -180,7 +233,9 @@ function Kanban() {
           />
         ))}
       </div>
-
+   {taskInfo && currentTask && (
+    <TaskInfo task={currentTask}  handleAddComment={handleAddComment} onClose={closeTaskInfo}/>
+   )}
       {isModalOpen && (
         <TaskModal
           onClose={closeModal}

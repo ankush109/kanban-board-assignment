@@ -22,6 +22,18 @@ export const addTask = async (taskData) => {
     const response = await api.post(`/task/create`, taskData);
     return response.data;
   };
+
+
+  export const addComment = async (taskData) => {
+    console.log(taskData.taskId,"taskiud")
+    const response = await api.post(`/task/addComment/${taskData.taskId}`, taskData.comment);
+    return response.data;
+  };
+  export const getComment = async(taskId)=>{
+    const response = await api.get(`/task/comment/${taskId}`)
+    return response.data;
+  }
+
   export const updateTask = async(taskData) =>{
     const response = await api.patch(`/task/${taskData.id}`, taskData);
     return response.data;
@@ -72,6 +84,22 @@ export const addTask = async (taskData) => {
     });
   };
   
+
+
+  export const useAddCommentMutation = () => {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: addComment,
+      onSuccess: (newTask) => {
+        queryClient.invalidateQueries({ queryKey: ["get-my-tasks"] });
+      },
+      onError: (error) => {
+        console.error("Error adding task:", error);
+      },
+    });
+  };
+  
 export const getTasksQuery = () =>
   useQuery({
     queryKey: ["get-my-tasks"],
@@ -81,3 +109,13 @@ export const getTasksQuery = () =>
       return res;
     },
   });
+  export const getCommentTasks = (taskId) =>
+    useQuery({
+      queryKey: ["get-task-comments"],
+      queryFn: () => getComment(taskId),
+      select: (data) => {
+        const res = data;
+        return res;
+      },
+    });
+  
