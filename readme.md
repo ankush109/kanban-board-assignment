@@ -1,4 +1,7 @@
 # Kanban-board 
+
+Note : if your using the live version the backend requests are slow as its deployed on a free server so the first time it will take time then it would work normally !
+
 Dark Mode : 
 
 ![](https://github.com/ankush109/kanban-board-assignment/blob/main/client/assets/dark-mode-ui.png)
