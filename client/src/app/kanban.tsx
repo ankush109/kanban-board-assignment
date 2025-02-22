@@ -13,6 +13,7 @@ import { useAddTaskMutation } from "@/lib/hooks/mutation/useAddTaskMutation";
 import { usedeleteTaskMutation } from "@/lib/hooks/mutation/useDeleteTaskMutation";
 import { useUpdateTaskMutation } from "@/lib/hooks/mutation/useUpdateTaskMutation";
 import { useGetTaskQuery } from "@/lib/hooks/queries/useGetTaskQuery";
+import { useTask } from "./provider/TaskContextProvider";
 
 function Kanban() {
   const { theme, toggleTheme } = useTheme();
@@ -20,13 +21,12 @@ function Kanban() {
   const { mutate: updateTask } = useUpdateTaskMutation();
   const { mutate: deleteTask } = usedeleteTaskMutation();
   const { data, refetch } = useGetTaskQuery();
-
+  const {setUndoTask,clearUndoTask,getUndoTask} =useTask()
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [taskInfo, setTaskInfo] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskType | null>(null);
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
-  const [undoTask, setUndoTask] = useState<TaskType | null>(null);
   const [currentTask, setCurrentTask] = useState<TaskType | null>(null);
   const [updatingColumn, setUpdatingColumn] = useState<any| null>(null);
   const touchStartX = useRef<number>(0);
@@ -65,7 +65,7 @@ function Kanban() {
     deleteTask(task.id, {
       onSuccess: () => {
         toast.success("Task Deleted successfully!");
-        setUndoTask(task);
+        setUndoTask(task)
        
       },
       onError: () => {
@@ -75,13 +75,12 @@ function Kanban() {
   };
 
   const handleUndoDelete = () => {
-    console.log("clicked");
-    
-    if (undoTask) {
-      addTask(undoTask, {
+    const undotask = getUndoTask()
+    if (undotask) {
+      addTask(undotask, {
         onSuccess: () => {
           toast.success("Task undo successfully");
-          setUndoTask(null);
+          clearUndoTask();
         },
         onError: () => {
           toast.error("Error occurred while undoing");
@@ -103,13 +102,11 @@ function Kanban() {
               setUpdatingColumn(""); 
             },
             onError: (error) => {
-              console.error("Failed to update task:", error);
               setUpdatingColumn(""); 
             },
           }
         );
       } catch (error) {
-        console.error("Error:", error);
         setUpdatingColumn("");
       }
       setDraggedTask(null);
@@ -159,7 +156,7 @@ function Kanban() {
       <div className="widgets">
         <div className="flex">
           <button className="add-task-button" onClick={() => openModal()}>Add Task</button>
-          <button disabled={!undoTask} className="add-task-button" onClick={handleUndoDelete}>Undo</button>
+          <button disabled={!getUndoTask()} className="add-task-button" onClick={handleUndoDelete}>Undo</button>
         </div>
         <div className={theme === "dark" ? "toggle-slide-1" : "toggle-slide"} onClick={toggleTheme}>
           <div className={`switch ${theme === "dark" ? "slide" : ""}`}></div>

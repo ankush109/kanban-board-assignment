@@ -4,6 +4,7 @@ import { ENDPOINTS } from "../endpoint";
 
 
 export const addTask = async (taskData:any) => {
+  console.log(taskData,"taskdata")
   const response = await api.post(ENDPOINTS.ADDTASK(),taskData);
   return response.data;
 };

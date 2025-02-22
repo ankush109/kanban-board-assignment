@@ -5,10 +5,11 @@ import Modal from "./modal";
 import { useTheme } from "../provider/ThemeProvider";
 import toast from "react-hot-toast";
 import { Comment, TaskProps } from "../types/types";
-import { Delete } from 'lucide-react';
+import { Delete } from "lucide-react";
 import { useAddCommentMutation } from "@/lib/hooks/mutation/useAddCommentMutation";
 import { usedeleteCommentMutation } from "@/lib/hooks/mutation/useDeleteCommentMutation";
 import { useGetCommentsQuery } from "@/lib/hooks/queries/useGetCommentsQuery";
+
 const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
   const { theme } = useTheme();
   const { mutate: addComment } = useAddCommentMutation();
@@ -19,7 +20,6 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
   const { data, refetch, isLoading } = useGetCommentsQuery(task.id);
   const { mutate: deleteComment, isSuccess } = usedeleteCommentMutation();
   const handleAddComment = (taskId: any, comment: any) => {
-    console.log(taskId, "taskid");
     if (comment.trim() == "") return toast.error("comment cannot be empty!");
     const taskData = {
       comment: comment,
@@ -107,12 +107,15 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
                   >
                     <p>{comment.content}</p>
                     <div className="button-task-info">
-                    <small>
-                      {new Date(comment.createdAt).toLocaleString()}
-                    </small>
-                    <div className="delete-icon" onClick={() => deleteCoommet(comment.id)}>
-                    <Delete color="red"/>
-                    </div>
+                      <small>
+                        {new Date(comment.createdAt).toLocaleString()}
+                      </small>
+                      <div
+                        className="delete-icon"
+                        onClick={() => deleteCoommet(comment.id)}
+                      >
+                        <Delete color="red" />
+                      </div>
                     </div>
                   </div>
                 ))

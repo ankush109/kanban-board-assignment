@@ -7,6 +7,7 @@ const TaskController = {
   async createTask(req, res) {
     try {
       const { name, description, status } = req.body;
+      console.log(name,"create")
       const task = await prisma.task.create({
         data: {
           name,
