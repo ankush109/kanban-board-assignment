@@ -10,6 +10,7 @@ export type KanbanColumnProps = {
   title: string;
   status: TaskType["status"];
   tasks: TaskType[];
+  isUpdating:boolean
   onEdit: (task: TaskType) => void;
   onDelete: (task: Task) => void;
   onDragStart: (task: TaskType) => void;

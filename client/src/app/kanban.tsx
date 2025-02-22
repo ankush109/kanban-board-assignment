@@ -31,7 +31,8 @@ function Kanban() {
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
   const [undoTask, setUndoTask] = useState<TaskType | null>(null);
   const [currentTask, setCurrentTask] = useState<TaskType | null>(null);
-
+  const [isUpdating, setIsUpdating] = useState(false); // Loading state for drop
+  const [updatingColumn, setUpdatingColumn] = useState<any| null>(null);
   const touchStartX = useRef<number>(0);
   const touchStartY = useRef<number>(0);
 
@@ -95,15 +96,27 @@ function Kanban() {
 
   const handleDragStart = (task: TaskType) => setDraggedTask(task);
 
-  const handleDrop = (newStatus: TaskType["status"]) => {
+  const handleDrop = async (newStatus: TaskType["status"]) => {
     if (draggedTask) {
-      updateTask(
-        { id: draggedTask.id, status: newStatus },
-        {
-          onSuccess: () => refetch(),
-          onError: (error) => console.error("Failed to update task:", error),
-        }
-      );
+      setUpdatingColumn(newStatus); 
+      try {
+        await updateTask(
+          { id: draggedTask.id, status: newStatus },
+          {
+            onSuccess: () => {
+              refetch();
+              setUpdatingColumn(""); 
+            },
+            onError: (error) => {
+              console.error("Failed to update task:", error);
+              setUpdatingColumn(""); 
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Error:", error);
+        setUpdatingColumn("");
+      }
       setDraggedTask(null);
     }
   };
@@ -173,6 +186,7 @@ function Kanban() {
             onDelete={handleDeleteTask}
             onDragStart={handleDragStart}
             onDrop={handleDrop}
+            isUpdating={updatingColumn === status} 
           />
         ))}
       </div>
