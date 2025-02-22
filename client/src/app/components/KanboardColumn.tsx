@@ -58,20 +58,25 @@ function KanbanColumn({
       </div>
       <div className="task-wrapper">
         {isUpdating && <div className="spinner"></div>}
-        {filteredTasks.map((task) => (
-          <TaskCard
-            handleTaskInfo={handleTaskInfo}
-            handleTouchEnd={handleTouchEnd}
-            handleTouchMove={handleTouchMove}
-            handleTouchStart={handleTouchStart}
-            key={task.id}
-            cardkey={task.id}
-            task={task}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onDragStart={onDragStart}
-          />
-        ))}
+        {filteredTasks.length > 0 ? (
+          filteredTasks.map((task) => (
+            <TaskCard
+              handleTaskInfo={handleTaskInfo}
+              handleTouchEnd={handleTouchEnd}
+              handleTouchMove={handleTouchMove}
+              handleTouchStart={handleTouchStart}
+              key={task.id}
+              cardkey={task.id}
+              task={task}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onDragStart={onDragStart}
+            />
+          ))
+        ): <div className={theme =="dark" ? "no-task-dark":"no-task-white"}>
+          
+          No task Found!
+          </div>}
       </div>
     </div>
   );

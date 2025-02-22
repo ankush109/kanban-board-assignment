@@ -11,7 +11,12 @@
 .home-container.light {
   background: #fff;
 }
-
+.no-task-white{
+  color: black;
+}
+.no-task-dark{
+  color: white;
+}
 .home-container.dark {
   background: #13111C;
 }
