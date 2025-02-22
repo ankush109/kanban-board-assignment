@@ -3,6 +3,7 @@ import { useState } from "react";
 import { TaskModalProps, TaskType } from "../types/types";
 import Modal from "./modal";
 import { useTheme } from "../provider/ThemeProvider";
+import toast from "react-hot-toast";
 
 
 const TaskModal = ({ onClose, onSave, task }: TaskModalProps) => {
@@ -12,8 +13,8 @@ const TaskModal = ({ onClose, onSave, task }: TaskModalProps) => {
   const [status, setStatus] = useState<TaskType["status"]>(task?.status || "todo");
 
   const handleSave = () => {
-    if (!title || !desc) return alert("Title and Description are required!");
-    onSave({ id: task?.id || Date.now(), name: title, description: desc, status });
+    if (!title || !desc) toast.error("Please enter title and description")
+    onSave({ id: task?.id , name: title, description: desc, status});
   };
 
   const isDarkTheme = theme === "dark";

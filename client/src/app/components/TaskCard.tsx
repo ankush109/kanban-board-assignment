@@ -1,6 +1,6 @@
 import { useTheme } from "../provider/ThemeProvider";
 import { Task, TaskCardProps } from "../types/types";
-
+import { Eye } from 'lucide-react';
 const TaskCard = ({
   cardkey,
   task,
@@ -31,13 +31,19 @@ const TaskCard = ({
       key={cardkey}
       className={cardClass}
       draggable
-      onClick={() => handleTaskInfo(task)}
+     
       onDragStart={() => onDragStart(task)}
       onTouchStart={(e) => handleTouchStart(e, task)}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <h1 className="title">{task.name}</h1>
+   
+   <div className="task-eye">
+   <h1 className="title">{task.name}</h1>
+      <div onClick={()=>handleTaskInfo(task)}>
+    <Eye  />
+    </div>
+   </div>
       <p className="description">{task.description}</p>
       <div className="task-actions">
         <button className="edit-button" onClick={handleEditClick}>

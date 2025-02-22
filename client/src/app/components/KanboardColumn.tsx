@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import TaskCard from "./TaskCard";
 import { KanbanColumnProps } from "../types/types";
 import { useTheme } from "../provider/ThemeProvider";
+import { Search } from "lucide-react";
 
 function KanbanColumn({
   title,
@@ -17,9 +18,20 @@ function KanbanColumn({
   handleTouchStart,
   handleTaskInfo,
 }: KanbanColumnProps) {
-  const filteredTasks = tasks.filter((task) => task.status === status);
   const { theme } = useTheme();
+  const [searchTerm, setSearchTerm] = useState<{ [key: string]: string }>({});
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>, columnStatus: string) => {
+    setSearchTerm((prev) => ({ ...prev, [columnStatus]: e.target.value }));
+  };
+
+  const filteredTasks = tasks
+  .filter(
+    (task) =>
+      task.status === status &&
+      (searchTerm[status] ? task.name.toLowerCase().includes(searchTerm[status].toLowerCase()) : true)
+  )
+  .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   return (
     <div
       className={`${theme === "dark" ? "kanban-column" : "kanban-column-light"}`}
@@ -27,10 +39,21 @@ function KanbanColumn({
       onDragOver={(e) => e.preventDefault()}
       onDrop={() => onDrop(status)}
     >
-      <h3 className={`${theme === "dark" ? "column_title" : "column_title_light"}`}>
-        {title}
-      </h3>
-      {isUpdating && <div className="spinner"></div>} {/* Spinner */}
+      <h3 className={`${theme === "dark" ? "column_title" : "column_title_light"}`}>{title}</h3>
+      <div className="search-container">
+        <div className="search-icon">
+          <Search className={theme === "dark" ? "icon-dark" : "icon-light"} />
+        </div>
+        <input
+          type="text"
+          placeholder="Search tasks..."
+          value={searchTerm[status] || ""}
+          onChange={(e) => handleSearchChange(e, status)}
+          className={`search-input ${theme === "dark" ? "search-input-dark" : "search-input-light"}`}
+        />
+      </div>
+     <div className="task-wrapper">
+     {isUpdating && <div className="spinner"></div>}
       {filteredTasks.map((task) => (
         <TaskCard
           handleTaskInfo={handleTaskInfo}
@@ -45,6 +68,7 @@ function KanbanColumn({
           onDragStart={onDragStart}
         />
       ))}
+     </div>
     </div>
   );
 }

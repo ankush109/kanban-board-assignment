@@ -14,10 +14,11 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
   const [newComment, setNewComment] = useState("");
   const [showInput, setShowInput] = useState(false);
 
-  const { data, refetch } = getCommentTasks(task.id);
+  const { data, refetch, isLoading } = getCommentTasks(task.id);
 
   const handleAddComment = (taskId: any, comment: any) => {
     console.log(taskId, "taskid");
+    if(comment.trim() == "") return toast.error("comment cannot be empty!")
     const taskData = {
       comment: comment,
       taskId: taskId,
@@ -28,7 +29,7 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
         onSuccess: () => {
           toast.success("Comment added successfully!");
           refetch();
-          setNewComment("");
+          setNewComment("")
         },
         onError: (error) => {
           toast.success("Error occurred while updating");
@@ -36,6 +37,7 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
       }
     );
   };
+
   useEffect(() => {
     if (data && data.message?.length > 0) {
       setComments(data.message);
@@ -46,15 +48,14 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
 
   return (
     <Modal onClose={onClose}>
-      <div
-        className={
-          theme === "dark" ? "task-modal-info" : "task-modal-info-light"
-        }
-      >
+      <div className={theme === "dark" ? "task-modal-info" : "task-modal-info-light"}>
         <div className={theme === "dark" ? "task-form-dark" : "task-form"}>
-          <label>
-            <span className="title-info">{task.name}</span>
-          </label>
+          <div className="task-info">
+            <label>
+              <span className="title-info">{task.name}</span>
+            </label>
+            <p className="description">Created at {new Date(task.createdAt).toLocaleDateString("en-GB")}</p>
+          </div>
           <label>
             <span className="description">{task.description}</span>
           </label>
@@ -62,58 +63,53 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
             <span>{task.status}</span>
           </label>
 
-          <h3
-            className={`${
-              theme == "dark" ? "column_title" : "column_title_light"
-            }`}
-          >
-            Comments:
+          <h3 className={`${theme == "dark" ? "column_title" : "column_title_light"}`}>
+            ({comments.length}) Comments
           </h3>
-          <div
-            className={`${
-              theme == "dark" ? "comments-section" : "comments-section-light"
-            }`}
-          >
-            {comments.length > 0 ? (
-              comments.map((comment) => (
-                <div
-                  key={comment.id}
-                  className={`${theme == "dark" ? "comment" : "comment-light"}`}
-                >
-                  <p>{comment.content}</p>
-                  <small>{new Date(comment.createdAt).toLocaleString()}</small>
-                </div>
-              ))
-            ) : (
-              <p>No comments yet.</p>
-            )}
-          </div>
-
-          {!showInput ? (
-            <button
-              className="add-task-button"
-              onClick={() => setShowInput(true)}
-            >
-              Add Comment
-            </button>
+          
+          {isLoading ? (
+         
+             <div className="spinner"></div>
+       
           ) : (
-            <div className="add-comment-section">
-              <input
-                type="text"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Write a comment..."
-              />
-              <button
-                className="add-task-button"
-                onClick={() => {
-                  handleAddComment(task.id, newComment);
-                }}
-              >
-                Submit
-              </button>
+            <div className={`${theme == "dark" ? "comments-section" : "comments-section-light"}`}>
+              {comments.length > 0 ? (
+                comments.map((comment) => (
+                  <div key={comment.id} className={`${theme == "dark" ? "comment" : "comment-light"}`}>
+                    <p>{comment.content}</p>
+                   <small>{new Date(comment.createdAt).toLocaleString()}</small>
+                  </div>
+                ))
+              ) : (
+                <p>No comments yet.</p>
+              )}
             </div>
           )}
+
+          <div className="">
+            {!showInput ? (
+              <button className="add-task-button" onClick={() => setShowInput(true)}>
+                Add Comment
+              </button>
+            ) : (
+              <div className="add-comment-section">
+                <input
+                  type="text"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Write a comment..."
+                />
+                <button
+                  className="add-task-button"
+                  onClick={() => {
+                    handleAddComment(task.id, newComment);
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Modal>

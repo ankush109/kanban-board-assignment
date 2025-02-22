@@ -3,7 +3,10 @@ export type TaskType = {
   name: string;
   description: string;
   status: "todo" | "progress" | "done";
+  createdAt:any
+  updatedAt:any
 };
+
 
 export type TaskStatus = "todo" | "progress" | "done";
 export type KanbanColumnProps = {
@@ -25,6 +28,8 @@ export interface Task {
   name: string;
   description: string;
   status: TaskStatus;
+  createdAt:any
+  updatedAt:any
 }
 
 export interface Comment {
@@ -40,12 +45,13 @@ export interface TaskProps {
     name: string;
     description: string;
     status: string;
+    createdAt:any
   };
   onClose: () => void;
 }
 export interface TaskModalProps {
   onClose: () => void;
-  onSave: (task: TaskType) => void;
+  onSave: (task: any) => void;
   task?: TaskType | null;
 }
 export interface TaskCardProps {

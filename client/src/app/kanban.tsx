@@ -21,8 +21,7 @@ function Kanban() {
   const { mutate: addTask } = useAddTaskMutation();
   const { mutate: updateTask } = useUpdateTaskMutation();
   const { mutate: deleteTask } = usedeleteTaskMutation();
-  const { mutate: addComment } = useAddCommentMutation();
-  const { data, isLoading, refetch } = getTasksQuery();
+  const { data, refetch } = getTasksQuery();
 
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,7 +30,6 @@ function Kanban() {
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
   const [undoTask, setUndoTask] = useState<TaskType | null>(null);
   const [currentTask, setCurrentTask] = useState<TaskType | null>(null);
-  const [isUpdating, setIsUpdating] = useState(false); // Loading state for drop
   const [updatingColumn, setUpdatingColumn] = useState<any| null>(null);
   const touchStartX = useRef<number>(0);
   const touchStartY = useRef<number>(0);
@@ -51,7 +49,7 @@ function Kanban() {
 
   const closeModal = () => setIsModalOpen(false);
 
-  const addOrEditTask = (task: TaskType) => {
+  const addOrEditTask = (task: any) => {
     const mutationOptions = {
       onSuccess: () => {
         toast.success(`Task ${editingTask ? "updated" : "added"} successfully`);
