@@ -55,9 +55,16 @@ const TaskModal = ({ onClose, onSave, task }: TaskModalProps) => {
               <option value="done">Done</option>
             </select>
           </label>
-          <button className="save-task-button" onClick={handleSave}>
+         <div>
+        <div className="flex">
+        <button className="save-task-button" onClick={handleSave}>
             {task ? "Save Changes" : "Add Task"}
           </button>
+          <button className="cancel-button" onClick={()=>onClose()}>
+            Cancel
+          </button>
+        </div>
+         </div>
         </div>
       </div>
     </Modal>

@@ -37,6 +37,21 @@ const TaskController = {
       res.status(500).json(customResponse(500, "Internal server error"));
     }
   },
+  async deleteComment(req, res) {
+    try {
+      console.log("in delete comment")
+      const commentId = req.params.id
+      const Comment = await prisma.comment.delete({
+      where:{
+        id:commentId
+      }
+      });
+      res.json(customResponse(200, Comment));
+    } catch (err) {
+      console.error(err);
+      res.status(500).json(customResponse(500, "Internal server error"));
+    }
+  },
   async getComment(req, res) {
     try {
       const taskId = req.params.id

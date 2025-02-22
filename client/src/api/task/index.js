@@ -19,6 +19,11 @@ export const addTask = async (taskData) => {
   const response = await api.post(`/task/create`, taskData);
   return response.data;
 };
+export const deleteComment = async (commentId) => {
+  const response = await api.delete(`/task/delete-comment/${commentId}` );
+  return response.data;
+};
+
 
 export const addComment = async ({ taskData }) => {
   console.log(taskData.taskId, "t");
@@ -53,6 +58,20 @@ export const usedeleteTaskMutation = () => {
     },
   });
 };
+export const usedeleteCommentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteComment,
+    onSuccess: (updatedTask) => {
+      queryClient.invalidateQueries({ queryKey: ["get-my-tasks"] });
+    },
+    onError: (error) => {
+      console.error("Error updating task:", error);
+    },
+  });
+};
+
 
 export const useUpdateTaskMutation = () => {
   const queryClient = useQueryClient();

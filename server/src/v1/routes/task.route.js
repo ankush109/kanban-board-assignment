@@ -9,4 +9,5 @@ router.patch("/:id", TaskController.updateTask);
 router.delete("/:id", TaskController.removeTask);
 router.post("/addComment/:id",TaskController.addComment)
 router.get("/comment/:id",TaskController.getComment)
+router.delete("/delete-comment/:id",TaskController.deleteComment)
 export default router;
