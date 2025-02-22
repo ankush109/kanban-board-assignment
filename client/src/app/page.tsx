@@ -9,8 +9,9 @@ export default function Home() {
     <div
       style={{
         background: theme === "light" ? "#fff" : "#13111C",
-        width: "100%",
-        height: "100%",
+        overflow: 'scroll',
+        width: "100vw",
+        height: "100vh",
       }}
     >
 
