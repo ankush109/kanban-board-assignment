@@ -50,6 +50,8 @@ Features :
 8. Backend with database setup to store the tasks along with their comments .
 9. No UI library used 
 10. Docker setup to run the entire app with just one command ( includes setting up the db ) 
+11. Have used good pratices like  React Query and Mutation hooks to cache data effeciently .
+12. Used Context Api to store things in localstorage like  the theme and task which is to be undo after delete 
 
 
 
