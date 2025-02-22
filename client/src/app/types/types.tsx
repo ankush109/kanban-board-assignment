@@ -25,3 +25,36 @@ export interface Task {
   description: string;
   status: TaskStatus;
 }
+
+export interface Comment {
+  id: string;
+  content: string;
+  createdAt: string;
+  taskId: number;
+}
+
+export interface TaskProps {
+  task: {
+    id: number;
+    name: string;
+    description: string;
+    status: string;
+  };
+  onClose: () => void;
+}
+export interface TaskModalProps {
+  onClose: () => void;
+  onSave: (task: TaskType) => void;
+  task?: TaskType | null;
+}
+export interface TaskCardProps {
+  cardkey: any;
+  task: Task;
+  onEdit: (task: Task) => void;
+  onDelete: (task: Task) => void;
+  onDragStart: (task: Task) => void;
+  handleTouchStart: (e: React.TouchEvent, task: Task) => void;
+  handleTouchMove: (e: React.TouchEvent) => void;
+  handleTouchEnd: (e: React.TouchEvent) => void;
+  handleTaskInfo: (task: Task) => void;
+}

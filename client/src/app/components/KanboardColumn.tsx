@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import TaskCard from "./TaskCard";
 import { KanbanColumnProps } from "../types/types";
 import { useTheme } from "../provider/ThemeProvider";

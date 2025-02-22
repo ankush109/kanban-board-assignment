@@ -1,5 +1,5 @@
 import { useTheme } from "../provider/ThemeProvider";
-import { Task } from "../types/types";
+import { Task, TaskCardProps } from "../types/types";
 
 const TaskCard = ({
   cardkey,
@@ -11,25 +11,27 @@ const TaskCard = ({
   handleTouchMove,
   handleTouchEnd,
   handleTaskInfo,
-  
-}: {
-  cardkey: any;
-  task: Task;
-  onEdit: (task: Task) => void;
-  onDelete: (task: Task) => void;
-  onDragStart: (task: Task) => void;
-  handleTouchStart : any,
-  handleTouchMove : any,
-  handleTouchEnd:any
-  handleTaskInfo:any
-}) => {
-const { theme } = useTheme()
+}: TaskCardProps) => {
+  const { theme } = useTheme();
+  const isDarkTheme = theme === "dark";
+  const cardClass = isDarkTheme ? "task-card" : "task-card-light";
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit(task);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(task);
+  };
+
   return (
     <div
       key={cardkey}
-      className={`${theme == "dark" ? 'task-card' : 'task-card-light'}`}
+      className={cardClass}
       draggable
-      onClick={()=>handleTaskInfo(task)}
+      onClick={() => handleTaskInfo(task)}
       onDragStart={() => onDragStart(task)}
       onTouchStart={(e) => handleTouchStart(e, task)}
       onTouchMove={handleTouchMove}
@@ -38,16 +40,10 @@ const { theme } = useTheme()
       <h1 className="title">{task.name}</h1>
       <p className="description">{task.description}</p>
       <div className="task-actions">
-        <button className="edit-button"   onClick={(e) => {
-            e.stopPropagation(); // Prevents bubbling to parent
-            onEdit(task);
-          }}>
+        <button className="edit-button" onClick={handleEditClick}>
           ✏️ Edit
         </button>
-        <button className="delete-button"  onClick={(e) => {
-            e.stopPropagation(); // Prevents bubbling to parent
-            onDelete(task);
-          }}>
+        <button className="delete-button" onClick={handleDeleteClick}>
           🗑 Delete
         </button>
       </div>

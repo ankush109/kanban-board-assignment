@@ -5,7 +5,7 @@ const ReactQueryProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 3000, // 5 minutes
+        staleTime: 3000, 
       },
     },
   });
