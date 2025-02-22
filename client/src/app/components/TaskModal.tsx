@@ -13,7 +13,7 @@ const TaskModal = ({ onClose, onSave, task }: TaskModalProps) => {
   const [status, setStatus] = useState<TaskType["status"]>(task?.status || "todo");
 
   const handleSave = () => {
-    if (!title || !desc) toast.error("Please enter title and description")
+    if (!title || !desc)  return toast.error("Please enter title and description")
     onSave({ id: task?.id , name: title, description: desc, status});
   };
 

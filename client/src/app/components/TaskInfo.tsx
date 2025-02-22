@@ -3,14 +3,12 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./modal";
 import { useTheme } from "../provider/ThemeProvider";
-import {
-  usedeleteCommentMutation,
-  getCommentTasks,
-  useAddCommentMutation,
-} from "@/api/task";
 import toast from "react-hot-toast";
 import { Comment, TaskProps } from "../types/types";
 import { Delete } from 'lucide-react';
+import { useAddCommentMutation } from "@/lib/hooks/mutation/useAddCommentMutation";
+import { usedeleteCommentMutation } from "@/lib/hooks/mutation/useDeleteCommentMutation";
+import { useGetCommentsQuery } from "@/lib/hooks/queries/useGetCommentsQuery";
 const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
   const { theme } = useTheme();
   const { mutate: addComment } = useAddCommentMutation();
@@ -18,7 +16,7 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
   const [newComment, setNewComment] = useState("");
   const [showInput, setShowInput] = useState(false);
 
-  const { data, refetch, isLoading } = getCommentTasks(task.id);
+  const { data, refetch, isLoading } = useGetCommentsQuery(task.id);
   const { mutate: deleteComment, isSuccess } = usedeleteCommentMutation();
   const handleAddComment = (taskId: any, comment: any) => {
     console.log(taskId, "taskid");

@@ -6,22 +6,20 @@ import TaskModal from "./components/TaskModal";
 import KanbanColumn from "./components/KanboardColumn";
 import { Task, TaskType } from "./types/types";
 import { useTheme } from "./provider/ThemeProvider";
-import {
-  getTasksQuery,
-  useAddCommentMutation,
-  useAddTaskMutation,
-  usedeleteTaskMutation,
-  useUpdateTaskMutation,
-} from "../api/task/index";
+
 import toast from "react-hot-toast";
 import TaskInfo from "./components/TaskInfo";
+import { useAddTaskMutation } from "@/lib/hooks/mutation/useAddTaskMutation";
+import { usedeleteTaskMutation } from "@/lib/hooks/mutation/useDeleteTaskMutation";
+import { useUpdateTaskMutation } from "@/lib/hooks/mutation/useUpdateTaskMutation";
+import { useGetTaskQuery } from "@/lib/hooks/queries/useGetTaskQuery";
 
 function Kanban() {
   const { theme, toggleTheme } = useTheme();
   const { mutate: addTask } = useAddTaskMutation();
   const { mutate: updateTask } = useUpdateTaskMutation();
   const { mutate: deleteTask } = usedeleteTaskMutation();
-  const { data, refetch } = getTasksQuery();
+  const { data, refetch } = useGetTaskQuery();
 
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,7 +51,6 @@ function Kanban() {
     const mutationOptions = {
       onSuccess: () => {
         toast.success(`Task ${editingTask ? "updated" : "added"} successfully`);
-        refetch();
         closeModal();
       },
       onError: () => {
@@ -69,7 +66,7 @@ function Kanban() {
       onSuccess: () => {
         toast.success("Task Deleted successfully!");
         setUndoTask(task);
-        refetch();
+       
       },
       onError: () => {
         toast.error("Error occurred while deleting");
@@ -78,11 +75,12 @@ function Kanban() {
   };
 
   const handleUndoDelete = () => {
+    console.log("clicked");
+    
     if (undoTask) {
       addTask(undoTask, {
         onSuccess: () => {
           toast.success("Task undo successfully");
-          refetch();
           setUndoTask(null);
         },
         onError: () => {
@@ -94,15 +92,14 @@ function Kanban() {
 
   const handleDragStart = (task: TaskType) => setDraggedTask(task);
 
-  const handleDrop = async (newStatus: TaskType["status"]) => {
+  const handleDrop =  (newStatus: TaskType["status"]) => {
     if (draggedTask) {
       setUpdatingColumn(newStatus); 
       try {
-        await updateTask(
+         updateTask(
           { id: draggedTask.id, status: newStatus },
           {
             onSuccess: () => {
-              refetch();
               setUpdatingColumn(""); 
             },
             onError: (error) => {

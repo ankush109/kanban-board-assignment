@@ -45,7 +45,13 @@
   color: white;
   border: none;
   cursor: pointer;
+
   border-radius: 5px;
+}
+.add-task-button:disabled{
+  /* background: #b44ddd; */
+  opacity: 30%;
+  cursor: not-allowed;
 }
 .task-info{
   display: flex;

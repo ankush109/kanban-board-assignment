@@ -30,7 +30,8 @@ const closeButtonStyles: React.CSSProperties = {
   cursor: "pointer",
   border: "none",
   background: "none",
-  fontSize: "18px",
+  color:"red",
+  fontSize: "32px",
 };
 
 const Modal = ({ children, onClose }: { children: React.ReactNode; onClose: () => void }) => {
