@@ -22,16 +22,20 @@ function KanbanColumn({
   const [searchTerm, setSearchTerm] = useState<{ [key: string]: string }>({});
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>, columnStatus: string) => {
-    setSearchTerm((prev) => ({ ...prev, [columnStatus]: e.target.value }));
+    const value = e.target.value;
+    setSearchTerm((prev) => ({ ...prev, [columnStatus]: value }));
   };
 
   const filteredTasks = tasks
-  .filter(
-    (task) =>
-      task.status === status &&
-      (searchTerm[status] ? task.name.toLowerCase().includes(searchTerm[status].toLowerCase()) : true)
-  )
-  .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+    .filter(
+      (task) =>
+        task.status === status &&
+        (searchTerm[status]?.trim()
+          ? task.name.toLowerCase().includes(searchTerm[status].trim().toLowerCase())
+          : true)
+    )
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
   return (
     <div
       className={`${theme === "dark" ? "kanban-column" : "kanban-column-light"}`}
@@ -52,23 +56,23 @@ function KanbanColumn({
           className={`search-input ${theme === "dark" ? "search-input-dark" : "search-input-light"}`}
         />
       </div>
-     <div className="task-wrapper">
-     {isUpdating && <div className="spinner"></div>}
-      {filteredTasks.map((task) => (
-        <TaskCard
-          handleTaskInfo={handleTaskInfo}
-          handleTouchEnd={handleTouchEnd}
-          handleTouchMove={handleTouchMove}
-          handleTouchStart={handleTouchStart}
-          key={task.id}
-          cardkey={task.id}
-          task={task}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onDragStart={onDragStart}
-        />
-      ))}
-     </div>
+      <div className="task-wrapper">
+        {isUpdating && <div className="spinner"></div>}
+        {filteredTasks.map((task) => (
+          <TaskCard
+            handleTaskInfo={handleTaskInfo}
+            handleTouchEnd={handleTouchEnd}
+            handleTouchMove={handleTouchMove}
+            handleTouchStart={handleTouchStart}
+            key={task.id}
+            cardkey={task.id}
+            task={task}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onDragStart={onDragStart}
+          />
+        ))}
+      </div>
     </div>
   );
 }
