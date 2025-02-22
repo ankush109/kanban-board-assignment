@@ -153,6 +153,7 @@ function Kanban() {
 
   return (
     <div className="kanban-container">
+      <div className={theme == "dark" ? "warning-dark" :"warning-light"}> Note : If Updating takes time its because the server is deployed on a free Tier</div>
       <div className="widgets">
         <div className="flex">
           <button className="add-task-button" onClick={() => openModal()}>Add Task</button>

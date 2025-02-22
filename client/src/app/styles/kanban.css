@@ -417,6 +417,19 @@ h2 {
   background: #3a0a4d;
 }
 
+.warning-dark {
+  color: white;
+  padding: 5px;
+margin-bottom: 5px;
+ 
+}
+.warning-light {
+  color: black;
+  padding: 5px;
+  margin-bottom: 5px;
+
+ 
+}
 @media (max-width: 768px) {
   .kanban-board {
     grid-template-columns: 1fr;
