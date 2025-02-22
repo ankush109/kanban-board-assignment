@@ -2,7 +2,7 @@
 import { useTheme } from "./provider/ThemeProvider";
 import Kanban from "./kanban";
 import "./styles/toggle.css";
-import "./styles/kanban.css"; // Import the new CSS file
+import "./styles/kanban.css"; 
 
 export default function Home() {
   const { theme } = useTheme();

@@ -22,6 +22,7 @@ export type KanbanColumnProps = {
   handleTouchMove :any
   handleTouchEnd:any
   handleTaskInfo:any
+  isTaskLoading:boolean
 };
 export interface Task {
   id: number;

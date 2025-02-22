@@ -20,7 +20,7 @@ function Kanban() {
   const { mutate: addTask } = useAddTaskMutation();
   const { mutate: updateTask } = useUpdateTaskMutation();
   const { mutate: deleteTask } = usedeleteTaskMutation();
-  const { data, refetch } = useGetTaskQuery();
+  const { data, refetch ,isLoading} = useGetTaskQuery();
   const {setUndoTask,clearUndoTask,getUndoTask} =useTask()
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -178,6 +178,7 @@ function Kanban() {
             onDelete={handleDeleteTask}
             onDragStart={handleDragStart}
             onDrop={handleDrop}
+            isTaskLoading={isLoading}
             isUpdating={updatingColumn === status} 
           />
         ))}

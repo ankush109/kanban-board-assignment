@@ -17,6 +17,7 @@ function KanbanColumn({
   handleTouchMove,
   handleTouchStart,
   handleTaskInfo,
+  isTaskLoading,
 }: KanbanColumnProps) {
   const { theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState<{ [key: string]: string }>({});
@@ -56,28 +57,30 @@ function KanbanColumn({
           className={`search-input ${theme === "dark" ? "search-input-dark" : "search-input-light"}`}
         />
       </div>
-      <div className="task-wrapper">
-        {isUpdating && <div className="spinner"></div>}
-        {filteredTasks.length > 0 ? (
-          filteredTasks.map((task) => (
-            <TaskCard
-              handleTaskInfo={handleTaskInfo}
-              handleTouchEnd={handleTouchEnd}
-              handleTouchMove={handleTouchMove}
-              handleTouchStart={handleTouchStart}
-              key={task.id}
-              cardkey={task.id}
-              task={task}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onDragStart={onDragStart}
-            />
-          ))
-        ): <div className={theme =="dark" ? "no-task-dark":"no-task-white"}>
-          
-          No task Found!
-          </div>}
-      </div>
+     {!isTaskLoading ? (
+       <div className="task-wrapper">
+       {isUpdating && <div className="spinner"></div>}
+       {filteredTasks.length > 0 ? (
+         filteredTasks.map((task) => (
+           <TaskCard
+             handleTaskInfo={handleTaskInfo}
+             handleTouchEnd={handleTouchEnd}
+             handleTouchMove={handleTouchMove}
+             handleTouchStart={handleTouchStart}
+             key={task.id}
+             cardkey={task.id}
+             task={task}
+             onEdit={onEdit}
+             onDelete={onDelete}
+             onDragStart={onDragStart}
+           />
+         ))
+       ): <div className={theme =="dark" ? "no-task-dark":"no-task-white"}>
+         
+         No task Found!
+         </div>}
+     </div>
+     ) :<div className="spinner"></div>}
     </div>
   );
 }
