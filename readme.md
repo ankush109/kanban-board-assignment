@@ -28,3 +28,19 @@ Edit Task Modal (dark) :
 Add Task Modal (light) :
 
 ![](https://github.com/ankush109/kanban-board-assignment/blob/main/client/assets/add-task-light.png)
+
+
+## Running with Docker
+
+The entire App can be run with a single command: (make sure docker is installed and running in background)
+
+```sh
+docker-compose up
+```
+
+
+
+
+
+
+
