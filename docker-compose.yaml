@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./server
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/mydatabase"
+      USER_ACCESS_SECRET: "ankush"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    command: >
+      sh -c "npx prisma migrate deploy && npm run dev"  # Apply migrations before running the app
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydatabase
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  frontend:
+    build: ./client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:6000 # Adjust based on your frontend's config
+
+volumes:
+  pg_data:
