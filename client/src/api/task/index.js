@@ -24,9 +24,11 @@ export const addTask = async (taskData) => {
   };
 
 
-  export const addComment = async (taskData) => {
-    console.log(taskData.taskId,"taskiud")
-    const response = await api.post(`/task/addComment/${taskData.taskId}`, taskData.comment);
+  export const addComment = async ({taskData}) => {
+    console.log(taskData.taskId,"t")
+    const response = await api.post(`/task/addComment/${taskData?.taskId}`, {
+      comment:taskData.comment
+    });
     return response.data;
   };
   export const getComment = async(taskId)=>{

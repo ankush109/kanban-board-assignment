@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./modal";
 import { useTheme } from "../provider/ThemeProvider";
-import { getCommentTasks } from "@/api/task";
+import { getCommentTasks, useAddCommentMutation } from "@/api/task";
+import toast from "react-hot-toast";
 
 // Define the type for comments
 interface Comment {
@@ -20,18 +21,38 @@ interface TaskProps {
     description: string;
     status: string;
   };
-  handleAddComment:(taskId:number,comment:string)=>void;
   onClose: () => void;
 }
 
-const TaskInfo: React.FC<TaskProps> = ({ task, onClose,handleAddComment }) => {
+const TaskInfo: React.FC<TaskProps> = ({ task, onClose }) => {
   const { theme } = useTheme();
+  const { mutate: addComment } = useAddCommentMutation();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [showInput, setShowInput] = useState(false); // Controls input visibility
 
-  const { data } = getCommentTasks(task.id);
+  const { data, refetch } = getCommentTasks(task.id);
 
+  const handleAddComment = (taskId: any, comment: any) => {
+    console.log(taskId, "taskid");
+    const taskData = {
+      comment: comment,
+      taskId: taskId,
+    };
+    addComment(
+      { taskData },
+      {
+        onSuccess: () => {
+          toast.success("Comment added successfully!");
+          refetch();
+          setNewComment("")
+        },
+        onError: (error) => {
+          toast.success("Error occurred while updating");
+        },
+      }
+    );
+  };
   useEffect(() => {
     if (data && data.message?.length > 0) {
       setComments(data.message);
@@ -40,11 +61,9 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose,handleAddComment }) => {
     }
   }, [data]);
 
- 
-
   return (
     <Modal onClose={onClose}>
-      <div className={theme === "dark" ? "task-modal-info" : "task-modal-info"}>
+      <div className={theme === "dark" ? "task-modal-info" : "task-modal-info-light"}>
         <div className={theme === "dark" ? "task-form-dark" : "task-form"}>
           <label>
             Title: <span>{task.name}</span>
@@ -56,11 +75,17 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose,handleAddComment }) => {
             Status: <span>{task.status}</span>
           </label>
 
-          <h3>Comments:</h3>
-          <div className="comments-section">
+          <h3
+            className={`${
+              theme == "dark" ? "column_title" : "column_title_light"
+            }`}
+          >
+            Comments:
+          </h3>
+          <div className={`${theme == "dark" ? "comments-section" : "comments-section-light"}`}>
             {comments.length > 0 ? (
               comments.map((comment) => (
-                <div key={comment.id} className="comment">
+                <div key={comment.id} className={`${theme == "dark" ? "comment" :"comment-light"}`}>
                   <p>{comment.content}</p>
                   <small>{new Date(comment.createdAt).toLocaleString()}</small>
                 </div>
@@ -71,7 +96,12 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose,handleAddComment }) => {
           </div>
 
           {!showInput ? (
-            <button onClick={() => setShowInput(true)}>Add Comment</button>
+            <button
+              className="add-task-button"
+              onClick={() => setShowInput(true)}
+            >
+              Add Comment
+            </button>
           ) : (
             <div className="add-comment-section">
               <input
@@ -80,7 +110,14 @@ const TaskInfo: React.FC<TaskProps> = ({ task, onClose,handleAddComment }) => {
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Write a comment..."
               />
-              <button onClick={()=>handleAddComment(task.id,newComment)}>Submit</button>
+              <button
+                className="add-task-button"
+                onClick={() => {
+                  handleAddComment(task.id, newComment);
+                }}
+              >
+                Submit
+              </button>
             </div>
           )}
         </div>

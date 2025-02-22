@@ -151,6 +151,7 @@ function Kanban() {
     addComment({taskData}, {
       onSuccess: () => {
        console.log(comment,"comment")
+       
       },
       onError: (error) => {
         toast.success("Error occurred while updating");
@@ -177,7 +178,7 @@ function Kanban() {
   const handleTaskInfo = (task: TaskType) => {
     console.log(task,"handletaskinfo")
     setcurrentTask(task);
-    setTaskInfo(true);  // Instead of toggling, explicitly open
+    setTaskInfo(true);  
   };
   
   const closeTaskInfo = () => {
@@ -234,7 +235,7 @@ function Kanban() {
         ))}
       </div>
    {taskInfo && currentTask && (
-    <TaskInfo task={currentTask}  handleAddComment={handleAddComment} onClose={closeTaskInfo}/>
+    <TaskInfo task={currentTask}  onClose={closeTaskInfo}/>
    )}
       {isModalOpen && (
         <TaskModal

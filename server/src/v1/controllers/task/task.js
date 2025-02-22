@@ -24,6 +24,7 @@ const TaskController = {
     try {
       const taskId = req.params.id
       const { comment  } =  req.body
+      console.log(comment,"comment")
       const Comment = await prisma.comment.create({
        data:{
         taskId:taskId,
