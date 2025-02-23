@@ -20,17 +20,9 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof localStorage !== 'undefined') {
-      return (localStorage.getItem("theme") as "light" | "dark") || "dark";
-    }
-    return "dark";
-  });
+  const [theme, setTheme] = useState<"light" | "dark">("dark")
 
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
+ 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };

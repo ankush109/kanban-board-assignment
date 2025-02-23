@@ -36,8 +36,6 @@ services:
     volumes:
       - ./client:/app
       - /app/node_modules
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:6000 # Adjust based on your frontend's config
 
 volumes:
   pg_data:

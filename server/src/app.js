@@ -14,7 +14,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:3000",
-     "https://profile-frontend-nu.vercel.app"
+"https://kanban-frontend-dusky.vercel.app"
     ],
     credentials: true,
   })
