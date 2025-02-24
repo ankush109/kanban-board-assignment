@@ -18,9 +18,6 @@ export type KanbanColumnProps = {
   onDelete: (task: Task) => void;
   onDragStart: (task: TaskType) => void;
   onDrop: (status: TaskType["status"]) => void;
-  handleTouchStart : any,
-  handleTouchMove :any
-  handleTouchEnd:any
   handleTaskInfo:any
   isTaskLoading:boolean
 };
@@ -61,8 +58,5 @@ export interface TaskCardProps {
   onEdit: (task: Task) => void;
   onDelete: (task: Task) => void;
   onDragStart: (task: Task) => void;
-  handleTouchStart: (e: React.TouchEvent, task: Task) => void;
-  handleTouchMove: (e: React.TouchEvent) => void;
-  handleTouchEnd: (e: React.TouchEvent) => void;
   handleTaskInfo: (task: Task) => void;
 }

@@ -13,9 +13,7 @@ function KanbanColumn({
   onDelete,
   onDragStart,
   onDrop,
-  handleTouchEnd,
-  handleTouchMove,
-  handleTouchStart,
+
   handleTaskInfo,
   isTaskLoading,
 }: KanbanColumnProps) {
@@ -64,9 +62,6 @@ function KanbanColumn({
          filteredTasks.map((task) => (
            <TaskCard
              handleTaskInfo={handleTaskInfo}
-             handleTouchEnd={handleTouchEnd}
-             handleTouchMove={handleTouchMove}
-             handleTouchStart={handleTouchStart}
              key={task.id}
              cardkey={task.id}
              task={task}

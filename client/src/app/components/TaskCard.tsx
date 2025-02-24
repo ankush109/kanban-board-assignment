@@ -7,9 +7,6 @@ const TaskCard = ({
   onEdit,
   onDelete,
   onDragStart,
-  handleTouchStart,
-  handleTouchMove,
-  handleTouchEnd,
   handleTaskInfo,
 }: TaskCardProps) => {
   const { theme } = useTheme();
@@ -32,9 +29,9 @@ const TaskCard = ({
       className={cardClass}
       draggable
       onDragStart={() => onDragStart(task)}
-      onTouchStart={(e) => handleTouchStart(e, task)}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      // onTouchStart={(e) => handleTouchStart(e, task)}
+      // onTouchMove={handleTouchMove}
+      // onTouchEnd={handleTouchEnd}
     >
       <div className="task-eye">
         <h1 className="title">{task.name}</h1>

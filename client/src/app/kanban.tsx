@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/kanban.css";
 import "./styles/toggle.css";
 import TaskModal from "./components/TaskModal";
@@ -29,8 +29,7 @@ function Kanban() {
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
   const [currentTask, setCurrentTask] = useState<TaskType | null>(null);
   const [updatingColumn, setUpdatingColumn] = useState<any| null>(null);
-  const touchStartX = useRef<number>(0);
-  const touchStartY = useRef<number>(0);
+
 
   useEffect(() => {
     if (data && data.message.length > 0) {
@@ -92,6 +91,7 @@ function Kanban() {
   const handleDragStart = (task: TaskType) => setDraggedTask(task);
 
   const handleDrop =  (newStatus: TaskType["status"]) => {
+    console.log("handleDrop")
     if (draggedTask) {
       setUpdatingColumn(newStatus); 
       try {
@@ -111,34 +111,6 @@ function Kanban() {
       }
       setDraggedTask(null);
     }
-  };
-
-  const handleTouchStart = (e: React.TouchEvent, task: TaskType) => {
-    setDraggedTask(task);
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    if (e.target instanceof HTMLElement) e.target.classList.add("dragging");
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!draggedTask) return;
-
-    e.preventDefault();
-    const touch = e.touches[0];
-    const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
-    const column = elements.find((el) => el.classList.contains("kanban-column")) as HTMLElement;
-
-    if (column) {
-      const status = column.dataset.status as TaskType["status"];
-      if (status && draggedTask.status !== status) {
-        setTasks(tasks.map((task) => (task.id === draggedTask.id ? { ...task, status } : task)));
-      }
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (e.target instanceof HTMLElement) e.target.classList.remove("dragging");
-    setDraggedTask(null);
   };
 
   const handleTaskInfo = (task: TaskType) => {
@@ -172,9 +144,7 @@ function Kanban() {
             status={status as TaskType["status"]}
             tasks={tasks}
             handleTaskInfo={handleTaskInfo}
-            handleTouchStart={handleTouchStart}
-            handleTouchMove={handleTouchMove}
-            handleTouchEnd={handleTouchEnd}
+          
             onEdit={openModal}
             onDelete={handleDeleteTask}
             onDragStart={handleDragStart}

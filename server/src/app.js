@@ -13,7 +13,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "http://localhost:3000",
+      "http://localhost:3001",
 "https://kanban-frontend-dusky.vercel.app"
     ],
     credentials: true,
@@ -47,7 +47,7 @@ app.use((err, req, res, next) => {
     .send({ status: err.status || 500, message: err.message });
 });
 
-const PORT = 5001;
+const PORT = 5002;
 app.listen(PORT, () => {
   console.log(`🚀 @ http://localhost:${PORT}`);
   console.log(`Connected to ${process.env.DATABASE_URL}`);
